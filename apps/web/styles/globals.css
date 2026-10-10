@@ -1,0 +1,8 @@
+@import "tailwindcss";
+@import "@heroui/styles";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-iran-yekan: "font", sans-serif;
+}
