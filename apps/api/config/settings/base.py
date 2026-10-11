@@ -1,8 +1,11 @@
 from pathlib import Path
 import os
+from dotenv import load_dotenv
 
 # مسیر ریشه پروژه (همون جایی که manage.py هست)
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+load_dotenv(BASE_DIR / ".env")
 
 # ---------------------------
 # Core / Environment
@@ -113,6 +116,29 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# --------------------------------
+#       Email Configuration
+# --------------------------------
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.environ["EMAIL_HOST"]
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", '587'))
+
+EMAIL_HOST_USER = os.environ["EMAIL_HOST_USER"]
+EMAIL_HOST_PASSWORD = os.environ["EMAIL_HOST_PASSWORD"]
+
+EMAIL_USE_TLS = (
+    os.environ.get("EMAIL_USE_TLS", "True").lower() == "true"
+)
+
+EMAIL_USE_SSL = (
+    os.environ.get("EMAIL_USE_SSL", "False").lower() == "true"
+)
+
+EMAIL_TIMEOUT = int(os.environ.get("EMAIL_TIMEOUT", "10"))
+
+DEFAULT_FROM_EMAIL = os.environ["DEFAULT_FROM_EMAIL"]
+
+ 
 # ---------------------------
 # DRF
 # ---------------------------
