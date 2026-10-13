@@ -7,7 +7,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint --fix"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "prepare": "husky",
+    "lint-staged": {
+      "*.{js,jsx,ts,tsx}": "eslint"
+    },
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@heroui/react": "3.2.6",
@@ -43,6 +50,8 @@
     "eslint-plugin-react-hooks": "5.2.0",
     "eslint-plugin-unused-imports": "4.4.1",
     "globals": "16.5.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
     "postcss": "8.5.28",
     "prettier": "3.9.9",
     "tailwind-variants": "3.3.1",
