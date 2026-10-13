@@ -31,7 +31,7 @@ export default function Home() {
           target="_blank"
         >
           <GithubIcon size={20} />
-          GitHub
+          گیت هاب
         </a>
       </div>
 
