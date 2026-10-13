@@ -1,0 +1,1 @@
+const unusedValue: string = "hello";
