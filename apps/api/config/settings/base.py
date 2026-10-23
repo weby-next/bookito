@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from datetime import timedelta
 
 # مسیر ریشه پروژه (همون جایی که manage.py هست)
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -33,19 +34,20 @@ DJANGO_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-    # "rest_framework",
-    # "rest_framework.authtoken",
-    # "django_filters",
+    "rest_framework",
+    "django_jalali",
+    "rest_framework_simplejwt.token_blacklist",
+    "drf_spectacular",
+    "drf_spectacular_sidecar",
 ]
 
 LOCAL_APPS = [
-    # "apps.accounts",
-    # "apps.customers",
-    # ...
+    "apps.authentication.apps.AuthenticationConfig",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
+AUTH_USER_MODEL = 'authentication.User'
 # ---------------------------
 # Middleware
 # ---------------------------
@@ -142,28 +144,68 @@ DEFAULT_FROM_EMAIL = os.environ["DEFAULT_FROM_EMAIL"]
 # ---------------------------
 # DRF
 # ---------------------------
-# REST_FRAMEWORK = {
-#     "DEFAULT_AUTHENTICATION_CLASSES": (
-#         # اگر فقط API داری بهتره JWT استفاده کنی
-#         # "rest_framework_simplejwt.authentication.JWTAuthentication",
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        # اگر فقط API داری بهتره JWT استفاده کنی
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
 
-#         # اگر می‌خوای از TokenAuth استفاده کنی:
-#         "rest_framework.authentication.TokenAuthentication",
+        # # اگر می‌خوای از TokenAuth استفاده کنی:
+        # "rest_framework.authentication.TokenAuthentication",
 
-#         # اگر ادمین/سشن هم داری:
-#         "rest_framework.authentication.SessionAuthentication",
-#     ),
-#     "DEFAULT_PERMISSION_CLASSES": (
-#         "rest_framework.permissions.IsAuthenticated",
-#     ),
-#     "DEFAULT_FILTER_BACKENDS": (
-#         "django_filters.rest_framework.DjangoFilterBackend",
-#         "rest_framework.filters.OrderingFilter",
-#         "rest_framework.filters.SearchFilter",
-#     ),
-#     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
-#     "PAGE_SIZE": 20,
-# }
+        # # اگر ادمین/سشن هم داری:
+        # "rest_framework.authentication.SessionAuthentication",
+    ),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated",
+    ),
+    "DEFAULT_THROTTLE_RATES": {
+        "otp_request": "15/hour",
+        "otp_verify": "15/hour",
+    },
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+# ---------------------------
+# JWT
+# ---------------------------
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "UPDATE_LAST_LOGIN": False,
+    "USER_ID_FIELD": "id",
+    "USER_ID_CLAIM": "user_id",
+}
+
+# ---------------------------
+# CACHES
+# ---------------------------
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://redis:6379/1",
+        "TIMEOUT": 300,
+    }
+}
+
+# ---------------------------
+# OpenAPI
+# ---------------------------
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Bookito API",
+    "DESCRIPTION": (
+        "OpenAPI documentation for Bookito, "
+        "an appointment booking platform."
+    ),
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+
+    # استفاده از فایل‌های محلی به‌جای CDN
+    "SWAGGER_UI_DIST": "SIDECAR",
+    "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
+    "REDOC_DIST": "SIDECAR",
+}
 
 # ---------------------------
 # Security basics (prod کامل‌تر میشه)

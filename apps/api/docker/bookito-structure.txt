@@ -1,0 +1,26 @@
+.git
+apps:
+	api:
+		.venv
+		apps
+		config:
+			settings:
+				base.py
+				dev.py
+				prod.py
+			asgi.py
+			wsgi.py
+			...
+		core
+		docker:
+			docker-compose.yml
+			Dockerfile
+		media
+		tests
+		utils
+		.dockerignore
+		.env
+		manage.py
+		requirements.txt
+		.....
+	web
