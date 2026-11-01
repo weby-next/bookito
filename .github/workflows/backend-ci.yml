@@ -64,6 +64,14 @@ jobs:
       POSTGRES_HOST: localhost
       POSTGRES_PORT: "5432"
       REDIS_URL: redis://localhost:6379/0
+      # Email configuration for CI
+      EMAIL_HOST: localhost
+      EMAIL_PORT: "1025"
+      EMAIL_HOST_USER: ci_user
+      EMAIL_HOST_PASSWORD: ci_password
+      EMAIL_USE_TLS: "False"
+      EMAIL_USE_SSL: "False"
+      EMAIL_BACKEND: django.core.mail.backends.locmem.EmailBackend
 
     steps:
       - name: Checkout
