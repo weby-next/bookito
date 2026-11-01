@@ -72,6 +72,7 @@ jobs:
       EMAIL_USE_TLS: "False"
       EMAIL_USE_SSL: "False"
       EMAIL_BACKEND: django.core.mail.backends.locmem.EmailBackend
+      DEFAULT_FROM_EMAIL: ci_user
 
     steps:
       - name: Checkout
