@@ -22,7 +22,7 @@ class SessionView(APIView):
         description="Returns the identity information of the current user.",
         responses={
             200: swaggerSerializer.SessionResponseSerializer,
-            401: swaggerSerializer.ErrorResponseSerializer,
+            401: swaggerSerializer.ErrorResponseSerializer1,
         },
     )
 
@@ -59,8 +59,8 @@ class LogoutView(APIView):
             204: OpenApiResponse(
                 description="Refresh token revoked successfully."
             ),
-            400: swaggerSerializer.ErrorResponseSerializer,
-            401: swaggerSerializer.ErrorResponseSerializer,
+            400: swaggerSerializer.ErrorResponseSerializer1,
+            401: swaggerSerializer.ErrorResponseSerializer1,
         },
     )
 
@@ -97,7 +97,7 @@ class BookitoTokenRefreshView(TokenRefreshView):
         auth=[],
         responses={
             200: swaggerSerializer.RefreshTokenResponseSerializer,
-            401: swaggerSerializer.ErrorResponseSerializer,
+            401: swaggerSerializer.ErrorResponseSerializer1,
         },
     )
     def post(self, request, *args, **kwargs):

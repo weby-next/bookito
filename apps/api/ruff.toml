@@ -1,0 +1,5 @@
+extend-exclude = [".venv", "migrations"]
+
+[lint]
+# فقط خطاهای واقعی (syntax و import یا متغیر بلااستفاده)؛ بعداً سخت‌گیرتر می‌کنیم
+select = ["E9", "F"]

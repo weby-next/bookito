@@ -43,6 +43,8 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "apps.authentication.apps.AuthenticationConfig",
+    "apps.businesses.apps.BusinessesConfig",
+
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -159,17 +161,18 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ),
     "DEFAULT_THROTTLE_RATES": {
-        "otp_request": "15/hour",
-        "otp_verify": "15/hour",
+        "otp_request": "5/hour",
+        "otp_verify": "10/hour",
     },
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "EXCEPTION_HANDLER": "core.apiResponse.exceptionHandler.custom_exception_handler",
 }
 
 # ---------------------------
 # JWT
 # ---------------------------
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
@@ -205,6 +208,12 @@ SPECTACULAR_SETTINGS = {
     "SWAGGER_UI_DIST": "SIDECAR",
     "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
     "REDOC_DIST": "SIDECAR",
+
+    "COMPONENT_SPLIT_REQUEST": True,
+    "ENUM_NAME_OVERRIDES": {
+        "BusinessStatusEnum": "apps.businesses.models.Business.Status",
+        "ErrorCodeEnum": "core.apiResponse.openapi.ErrorCode",
+    },
 }
 
 # ---------------------------

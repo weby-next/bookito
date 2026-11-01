@@ -1,0 +1,740 @@
+openapi: 3.0.3
+info:
+  title: Bookito API
+  version: 1.0.0
+  description: OpenAPI documentation for Bookito, an appointment booking platform.
+paths:
+  /api/auth/logout:
+    post:
+      operationId: logout
+      description: Revokes the supplied refresh token by adding it to the blacklist.
+      summary: Logout and revoke refresh token
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogoutRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LogoutRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LogoutRequest'
+        required: true
+      responses:
+        '204':
+          description: Refresh token revoked successfully.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSerializer1'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSerializer1'
+          description: ''
+  /api/auth/otp/request:
+    post:
+      operationId: request_email_otp
+      description: Requests a one-time verification code sent to the supplied email.
+        A resend cooldown and rate limits apply.
+      summary: Request email OTP
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OTPRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OTPRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OTPRequestRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OTPRequestResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSerializer1'
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSerializer1'
+          description: ''
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSerializer1'
+          description: ''
+  /api/auth/otp/verify:
+    post:
+      operationId: verify_email_otp
+      description: Verifies the one-time code sent to an email address. On successful
+        verification, returns access and refresh tokens.
+      summary: Verify email OTP and obtain tokens
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OTPVerifyRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OTPVerifyRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OTPVerifyRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OTPVerifyResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSerializer1'
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSerializer1'
+          description: ''
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSerializer1'
+          description: ''
+  /api/auth/refresh-token:
+    post:
+      operationId: refresh_access_token
+      description: Accepts a valid refresh token and returns a new access token. With
+        refresh token rotation enabled, a new refresh token is returned and the previous
+        token is blacklisted.
+      summary: Refresh authentication tokens
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequestRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshTokenResponse'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSerializer1'
+          description: ''
+  /api/auth/session:
+    get:
+      operationId: get_current_session
+      description: Returns the identity information of the current user.
+      summary: Get current authenticated user
+      tags:
+      - Authentication
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionResponse'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseSerializer1'
+          description: ''
+  /api/owner/businesses/:
+    get:
+      operationId: owner_businesses_list
+      summary: List the owner's businesses
+      tags:
+      - Owner · Businesses
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessListResponse'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: UNAUTHENTICATED
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: FORBIDDEN
+    post:
+      operationId: owner_businesses_create
+      summary: Create a business
+      tags:
+      - Owner · Businesses
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BusinessCreateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BusinessCreateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BusinessCreateRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessDetailResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: VALIDATION_ERROR
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: UNAUTHENTICATED
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: FORBIDDEN
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: SLUG_TAKEN
+  /api/owner/businesses/{business_id}/:
+    get:
+      operationId: owner_businesses_retrieve
+      summary: retrieve a business
+      parameters:
+      - in: path
+        name: business_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Owner · Businesses
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessDetailResponse'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: UNAUTHENTICATED
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: FORBIDDEN
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: NOT_FOUND
+    put:
+      operationId: owner_businesses_update
+      summary: Update a business
+      parameters:
+      - in: path
+        name: business_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Owner · Businesses
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BusinessUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BusinessUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BusinessUpdateRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessDetailResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: VALIDATION_ERROR
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: UNAUTHENTICATED
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: FORBIDDEN
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: NOT_FOUND
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: SLUG_TAKEN
+  /api/owner/businesses/slug-availability/:
+    get:
+      operationId: owner_businesses_slug_availability
+      summary: Check whether a slug is free
+      parameters:
+      - in: query
+        name: business_id
+        schema:
+          type: integer
+          minimum: 1
+      - in: query
+        name: slug
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 100
+          pattern: ^[-a-zA-Z0-9_]+$
+        required: true
+      tags:
+      - Owner · Businesses
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SlugAvailabilityResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: VALIDATION_ERROR
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: UNAUTHENTICATED
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: FORBIDDEN
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: NOT_FOUND
+components:
+  schemas:
+    AuthenticatedUser:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+          nullable: true
+        last_name:
+          type: string
+          nullable: true
+      required:
+      - email
+      - id
+    BusinessCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        slug:
+          type: string
+          minLength: 1
+          maxLength: 100
+          pattern: ^[-a-zA-Z0-9_]+$
+        description:
+          type: string
+          nullable: true
+      required:
+      - name
+      - slug
+    BusinessDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        slug:
+          type: string
+          readOnly: true
+          pattern: ^[-a-zA-Z0-9_]+$
+        description:
+          type: string
+          readOnly: true
+          nullable: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/BusinessStatusEnum'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - description
+      - id
+      - name
+      - slug
+      - status
+      - updated_at
+    BusinessDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/BusinessDetail'
+      required:
+      - data
+      - message
+      - success
+    BusinessList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        slug:
+          type: string
+          readOnly: true
+          pattern: ^[-a-zA-Z0-9_]+$
+        status:
+          allOf:
+          - $ref: '#/components/schemas/BusinessStatusEnum'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - name
+      - slug
+      - status
+    BusinessListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BusinessList'
+      required:
+      - data
+      - message
+      - success
+    BusinessStatusEnum:
+      enum:
+      - draft
+      - published
+      - suspended
+      type: string
+      description: |-
+        * `draft` - پیش‌نویس
+        * `published` - منتشر‌شده
+        * `suspended` - تعلیق‌شده
+    BusinessUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        slug:
+          type: string
+          minLength: 1
+          maxLength: 100
+          pattern: ^[-a-zA-Z0-9_]+$
+        description:
+          type: string
+          nullable: true
+      required:
+      - name
+      - slug
+    ErrorCodeEnum:
+      enum:
+      - VALIDATION_ERROR
+      - OTP_INVALID
+      - OTP_EXPIRED
+      - UNAUTHENTICATED
+      - FORBIDDEN
+      - NOT_FOUND
+      - SLUG_TAKEN
+      - PUBLISH_INCOMPLETE
+      - OTP_RATE_LIMITED
+      - RATE_LIMITED
+      - INTERNAL_ERROR
+      - SERVICE_UNAVAILABLE
+      type: string
+      description: |-
+        * `VALIDATION_ERROR` - Validation Error
+        * `OTP_INVALID` - Otp Invalid
+        * `OTP_EXPIRED` - Otp Expired
+        * `UNAUTHENTICATED` - Unauthenticated
+        * `FORBIDDEN` - Forbidden
+        * `NOT_FOUND` - Not Found
+        * `SLUG_TAKEN` - Slug Taken
+        * `PUBLISH_INCOMPLETE` - Publish Incomplete
+        * `OTP_RATE_LIMITED` - Otp Rate Limited
+        * `RATE_LIMITED` - Rate Limited
+        * `INTERNAL_ERROR` - Internal Error
+        * `SERVICE_UNAVAILABLE` - Service Unavailable
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/ErrorCodeEnum'
+        message:
+          type: string
+        fields:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+      required:
+      - code
+      - message
+    ErrorResponseSerializer1:
+      type: object
+      properties:
+        detail:
+          type: string
+      required:
+      - detail
+    LogoutRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          minLength: 1
+      required:
+      - refresh
+    OTPRequestRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 350
+      required:
+      - email
+    OTPRequestResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+        expires_in:
+          type: integer
+      required:
+      - detail
+      - expires_in
+    OTPVerifyRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 350
+        code:
+          type: string
+          minLength: 1
+          pattern: ^\d{6}$
+      required:
+      - code
+      - email
+    OTPVerifyResponse:
+      type: object
+      properties:
+        access:
+          type: string
+        refresh:
+          type: string
+        user:
+          $ref: '#/components/schemas/AuthenticatedUser'
+        created:
+          type: boolean
+      required:
+      - access
+      - created
+      - refresh
+      - user
+    RefreshTokenRequestRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          minLength: 1
+      required:
+      - refresh
+    RefreshTokenResponse:
+      type: object
+      properties:
+        access:
+          type: string
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+    SessionResponse:
+      type: object
+      properties:
+        authenticated:
+          type: boolean
+        user:
+          $ref: '#/components/schemas/AuthenticatedUser'
+      required:
+      - authenticated
+      - user
+    SlugAvailabilityResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/SlugAvailabilityResult'
+      required:
+      - data
+      - message
+      - success
+    SlugAvailabilityResult:
+      type: object
+      properties:
+        slug:
+          type: string
+        available:
+          type: boolean
+      required:
+      - available
+      - slug
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

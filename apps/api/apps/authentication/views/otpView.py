@@ -11,7 +11,7 @@ from ..serializers import (
     swaggerSerializer
 )
 from ..services import request_email_otp, verify_email_otp, blacklist_user_refresh_tokens
-from drf_spectacular.utils import extend_schema, OpenApiResponse
+from drf_spectacular.utils import extend_schema
 
 User = get_user_model()
 
@@ -33,9 +33,9 @@ class OTPRequestView(APIView):
         auth=[],
         responses={
             200: swaggerSerializer.OTPRequestResponseSerializer,
-            400: swaggerSerializer.ErrorResponseSerializer,
-            403: swaggerSerializer.ErrorResponseSerializer,
-            429: swaggerSerializer.ErrorResponseSerializer,
+            400: swaggerSerializer.ErrorResponseSerializer1,
+            403: swaggerSerializer.ErrorResponseSerializer1,
+            429: swaggerSerializer.ErrorResponseSerializer1,
         },
     )
 
@@ -87,9 +87,9 @@ class OTPVerifyView(APIView):
         auth=[],
         responses={
             200: swaggerSerializer.OTPVerifyResponseSerializer,
-            400: swaggerSerializer.ErrorResponseSerializer,
-            403: swaggerSerializer.ErrorResponseSerializer,
-            429: swaggerSerializer.ErrorResponseSerializer,
+            400: swaggerSerializer.ErrorResponseSerializer1,
+            403: swaggerSerializer.ErrorResponseSerializer1,
+            429: swaggerSerializer.ErrorResponseSerializer1,
         },
     )
 

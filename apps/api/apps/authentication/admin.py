@@ -1,10 +1,9 @@
 from django.contrib import admin
-from .models import *
+from .models import User
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Permission
 
 admin.site.register(Permission)
-
 
 @admin.register(User)
 class UserAdmin(UserAdmin):

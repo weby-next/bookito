@@ -2,8 +2,12 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from .managers import UserManager
 from django_jalali.db.models import jDateTimeField
-from .validators import *
-from django.core.validators import MinValueValidator, MaxValueValidator
+from .validators import (
+    email_validator, 
+    phone_validator,
+    nationalCode_validator,
+    date_validator
+)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
