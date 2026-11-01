@@ -57,7 +57,8 @@ jobs:
     env:
       DJANGO_SETTINGS_MODULE: config.settings.dev
       # مقدارهای ساختگی فقط برای CI؛ هیچ‌کدام راز واقعی نیستند
-      SECRET_KEY: ci-only-not-a-real-secret
+      DJANGO_SECRET_KEY: ci-only-not-a-real-secret
+      DJANGO_ALLOWED_HOSTS: localhost, 127.0.0.1
       POSTGRES_DB: bookito_ci
       POSTGRES_USER: ci_user
       POSTGRES_PASSWORD: ci_password
