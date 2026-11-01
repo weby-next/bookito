@@ -3,3 +3,7 @@ extend-exclude = [".venv", "migrations"]
 [lint]
 # فقط خطاهای واقعی (syntax و import یا متغیر بلااستفاده)؛ بعداً سخت‌گیرتر می‌کنیم
 select = ["E9", "F"]
+
+[tool.ruff.lint.per-file-ignores]
+"config/settings/dev.py" = ["F403", "F405"]
+"config/settings/prod.py" = ["F403", "F405"]
